@@ -1,28 +1,31 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.26;
 
-contract StarcatEthBridge {
-    IERC20 public token;
+import {Ownable} from "openzeppelin/access/Ownable.sol";
+
+contract StarcatEthBridge is Ownable {
     address public L2BridgeAddress;
 
-    event Deposit(address indexed user, uint256 amount);
-    event Withdraw(address indexed user, uint256 amount);
+    event Swap(address indexed user, uint256 amount, uint256 StarknetAddress);
 
-    constructor(IERC20 _token) {
-        token = _token;
+    modifier onlyL2Bridge() {
+        require(msg.sender == L2BridgeAddress, "Caller is not L2Bridge");
+        _;
+    }
+
+    constructor() Ownable(msg.sender) {
     }
 
     function setL2BridgeAddress(address _L2BridgeAddress) external onlyOwner {
         L2BridgeAddress = _L2BridgeAddress;
     }
 
-    function deposit(uint256 amount) external {
-        require(token.transferFrom(msg.sender, address(this), amount), "Transfer failed");
-        emit Deposit(msg.sender, amount);
+    function swap(uint256 StarknetAddress) external payable {
+        require(msg.value > 0, "Must send ETH");
+        emit Swap(msg.sender, msg.value, StarknetAddress);
     }
 
-    function withdraw(address user, uint256 amount) external onlyOwner {
-        require(token.transfer(user, amount), "Transfer failed");
-        emit Withdraw(user, amount);
+    function getBalance() external view returns (uint256) {
+        return address(this).balance;
     }
 }
