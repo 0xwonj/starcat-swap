@@ -1,0 +1,2 @@
+source .env
+forge script script/StarcatSwapBridge.s.sol --rpc-url $SEPOLIA_RPC_URL --broadcast --private-key $PRIVATE_KEY
