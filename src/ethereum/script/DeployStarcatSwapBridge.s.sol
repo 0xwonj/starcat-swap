@@ -4,7 +4,7 @@ pragma solidity ^0.8.26;
 import {Script, console} from "forge-std/Script.sol";
 import {StarcatSwapBridge} from "../src/StarcatSwapBridge.sol";
 
-contract StarcatSwapBridgeScript is Script {
+contract DepolyStarcatSwapBridge is Script {
     StarcatSwapBridge public bridge;
     address public l2SwapPoolAddress;
 
